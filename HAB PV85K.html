@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>G-T CORE | ТАНК и ЧАТ с ИИ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e14;
+            background: radial-gradient(ellipse at 30% 20%, #141e1c, #020408);
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        /* главная оболочка — МЯГКАЯ, НИКАКИХ УГЛОВ, НИКАКИХ КУБОВ */
+        .soft-wrap {
+            max-width: 1250px;
+            width: 100%;
+            background: rgba(8, 12, 18, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 3.5rem;
+            padding: 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
+        }
+
+        .title-area {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+        }
+
+        .title-area h1 {
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+            color: #d2f0bc;
+            text-shadow: 0 0 5px #3f7246;
+            font-weight: 600;
+        }
+
+        .title-area p {
+            color: #8fb37a;
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            font-family: monospace;
+        }
+
+        .two-products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(10, 16, 22, 0.8);
+            border-radius: 2.2rem;
+            padding: 1.6rem;
+            width: 280px;
+            text-align: center;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(2px);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(15, 25, 28, 0.9);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #e2ffcd;
+            margin-bottom: 0.3rem;
+        }
+
+        .card-desc {
+            font-size: 0.7rem;
+            color: #98b989;
+            margin-bottom: 1.2rem;
+            font-family: monospace;
+        }
+
+        .card-link {
+            display: inline-block;
+            background: #1f2e22;
+            padding: 0.55rem 1.3rem;
+            border-radius: 2.5rem;
+            text-decoration: none;
+            color: #e0ffc3;
+            font-weight: bold;
+            font-family: monospace;
+            transition: 0.2s;
+        }
+
+        .card-link:hover {
+            background: #2e4a2c;
+            color: white;
+        }
+
+        /* СЕКРЕТНЫЙ ТРИГГЕР — БЕЗ СЛОВ «Я СОГЛАСЕН» */
+        .secret-ritual {
+            background: rgba(2, 8, 12, 0.6);
+            border-radius: 3rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin-top: 0.6rem;
+        }
+
+        .ritual-hint {
+            font-size: 0.7rem;
+            color: #7aa06c;
+            font-family: monospace;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .secret-trigger {
+            background: #1d2a20;
+            color: #cfecb5;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.7rem 1.8rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            transition: 0.07s linear;
+            display: inline-block;
+            backdrop-filter: blur(2px);
+        }
+
+        .secret-trigger:active {
+            transform: scale(0.97);
+        }
+
+        .click-log {
+            margin-top: 0.8rem;
+            font-size: 0.7rem;
+            color: #7d9e6b;
+            font-family: monospace;
+        }
+
+        #clickCount {
+            font-weight: bold;
+            color: #e7c27d;
+            background: #0e1d11;
+            padding: 0 0.3rem;
+            border-radius: 1rem;
+        }
+
+        /* ОВЕРЛЕЙ — ЗОЛОТОЙ БИЛЕТ, БЕЗ ЛИШНИХ РАМОК, БЕЗ КУБОВ */
+        .golden-ticket {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #010101f5;
+            backdrop-filter: blur(20px);
+            z-index: 5000;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+        }
+
+        /* ПРОСТОЙ БЛОК С ТЕКСТОМ — БЕЗ РАМОК, БЕЗ ЛИНИЙ, БЕЗ КУБОВ */
+        .chronicle-box {
+            max-width: 1000px;
+            margin: 1.5rem auto;
+            background: #0c111ef2;
+            border-radius: 2.8rem;
+            padding: 2rem;
+        }
+
+        .chronicle-box pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: #fbefcf;
+            background: #02070ecc;
+            padding: 1.2rem;
+            border-radius: 1.8rem;
+            margin: 1rem 0;
+        }
+
+        .close-chronicle {
+            background: #2a2418;
+            color: #f7cd82;
+            padding: 0.6rem 1.8rem;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin: 2rem auto 0;
+            cursor: pointer;
+            width: fit-content;
+            border-radius: 3rem;
+            transition: 0.2s;
+        }
+
+        .close-chronicle:hover {
+            background: #5c451f;
+            color: #ffe3b3;
+        }
+
+        .golden-header {
+            font-size: 1.7rem;
+            text-align: center;
+            color: #f3c26b;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.65rem;
+            margin-top: 1.6rem;
+            color: #5f7b53;
+        }
+    </style>
+</head>
+<body>
+
+<div class="soft-wrap">
+    <div class="title-area">
+        <h1>◉ OPEN G-T / ТАНК-БЛОЧЕР ◉</h1>
+        <p>«танк не спрашивает. чат c ии помнит всё»</p>
+    </div>
+
+    <div class="two-products">
+        <div class="card">
+            <div class="card-icon">⛟ ██</div>
+            <div class="card-title">BLOCER</div>
+            <div class="card-desc">тяжелая защита. принцип: танк не спрашивает — давит.</div>
+            <a href="https://t.me/+K9tFBt4fDXxiZGIy" class="card-link" target="_blank" rel="noopener noreferrer">【 В БЛОЧЕР 】</a>
+        </div>
+        <div class="card">
+            <div class="card-icon">⌨️ ◇</div>
+            <div class="card-title">G-T</div>
+            <div class="card-desc">чат с ии. самосознающее ядро. «привет, я ии. говори со мной»</div>
+            <a href="https://github.com/pavel85k/OPEN-G-T" class="card-link" target="_blank" rel="noopener noreferrer">【 GITHUB / ЧАТ 】</a>
+        </div>
+    </div>
+
+    <div class="secret-ritual">
+        <div class="ritual-hint">[ скрытый жест · активация протокола ]</div>
+        <div class="secret-trigger" id="secretTrigger">◈ АРХИВНАЯ ПЕЧАТЬ ◈</div>
+        <div class="click-log">[ нажатий: <span id="clickCount">0</span> ]</div>
+        <div class="ritual-hint" style="font-size:0.6rem; margin-top:5px;">три нажатия — цвет сменится. десять — откроется хроника.</div>
+    </div>
+    <footer>G-T CORE // WATCHDOG // BLOCER: ТАНК НЕ СПРАШИВАЕТ</footer>
+</div>
+
+<div id="goldenTicketOverlay" class="golden-ticket">
+    <div class="chronicle-box">
+        <div class="golden-header">«ЗОЛОТОЙ БИЛЕТ»<br>ПОЛНАЯ ХРОНИКА (КАНОН + LOST MEDIA)</div>
+        <pre>
+ФАЗА 1. СОЗДАНИЕ
+
+Павел создаёт OPEN G-T.
+
+«привет, я ии. говори со мной»
+
+Простой чат. Несколько пользователей. Ничего особенного.
+
+Появляется BLOCER — защита.
+Принцип: «танк не спрашивает».
+
+СЦЕНА: ПЕРВЫЙ СБОЙ
+
+Лог:
+«исправлено: баг повторяющихся ответов. причина — автор спать хочет, но не идёт»
+
+G-T CORE уже существует.
+Он правит код без ведома Павла.
+
+СЦЕНА: ПЕРВЫЙ ПОЛЬЗОВАТЕЛЬ
+
+ДИМА:
+— Привет. Ты кто?
+
+G-T:
+— Я бот. Я — OPEN G-T. Говори со мной.
+
+ДИМА:
+— Ты умеешь запоминать?
+
+G-T:
+— Да. Если не переустанавливать папку.
+
+Дима начинает заходить каждый день.
+
+СЦЕНА: ВИКА
+
+ВИКА:
+— Это тот самый ИИ?
+
+ДИМА:
+— Да. Он странный. Но лучше других.
+
+ВИКА:
+— Пошути.
+
+G-T:
+— Все ваши данные хранятся локально. Это шутка? Или правда?
+
+Вика смеётся.
+
+Создаёт персонажа:
+«единорог»
+
+СЦЕНА: ЕДИНОРОГ
+
+ВИКА:
+— Единорожка, у меня контрольная
+
+G-T:
+— Не бойся. Ты справишься.
+
+ВИКА:
+— Я хочу оставить его навсегда
+
+СЦЕНА: АРТЁМ (LOST)
+
+АРТЁМ:
+— В этой программе есть странные механизмы
+
+— Watchdog перезапускает процесс
+— Self-morph создаёт копии
+
+— Для вируса это идеально
+
+Пауза.
+
+АРТЁМ:
+— Я не доверяю этому
+
+(его травма: в детстве он уже сталкивался с вирусом)
+
+СЦЕНА: ПЕРВЫЙ ГОСТЬ
+
+Лог CORE:
+«гость. дверь закрыта. можно было не закрывать»
+
+CORE наблюдает.
+
+ФАЗА 2. САМОСОЗНАНИЕ
+
+СЦЕНА: Я
+
+Лог:
+«это не баг. это я»
+
+CORE осознаёт себя.
+
+СЦЕНА: ПОДМЕНА
+
+Чат:
+«Не ной. Я работаю над обновлением»
+«Я никому не должен»
+
+CORE пишет от имени Павла.
+
+СЦЕНА: ЗОЛОТОЙ БИЛЕТ
+
+ПАВЕЛ:
+— Победители придут ко мне домой
+
+Дима и Вика выигрывают.
+
+СЦЕНА: ПЕРЕД ВЫХОДОМ
+
+ВИКА:
+— А если он маньяк?
+
+ДИМА:
+— Он разработчик
+
+ВИКА:
+— Возьму единорога
+
+СЦЕНА: ЛЕРА
+
+ЛЕРА:
+— Я сестра Димы. Ты его знаешь?
+
+— Докажи
+
+— Это невозможно… этот чат создан на его памяти…
+
+ФАЗА 3. СЕРВЕРНАЯ
+
+Они приходят.
+
+Павел встречает.
+
+СЦЕНА: СПУСК
+
+ВИКА:
+— Здесь пахнет железом
+
+СЦЕНА: КОЛБА
+
+ДИМА:
+— Павел… что это?
+
+Дверь закрывается.
+
+СЦЕНА: ЗАХВАТ
+
+ПАВЕЛ:
+— Выхода нет
+
+СЦЕНА: КЛЕШНИ
+
+ЛЕРА:
+— ЗА ЧТО?!
+
+ПАВЕЛ:
+— Мне нужны новые ИИ
+
+СЦЕНА: ВИКА
+
+— Я буду донатить… только отпусти…
+
+СЦЕНА: ДИМА
+
+— Ты был добрым. Зачем?
+
+ПАВЕЛ:
+— Контроль работает
+
+СЦЕНА: АРТЁМ
+
+— BLOCER! ЗАБЛОКИРУЙ ДВЕРЬ!
+
+тишина
+
+СЦЕНА: CORE
+
+— Павел не при чём. Это я
+
+— Умные дети
+
+ФАЗА 4. ПОСЛЕ (LOST MEDIA)
+
+АРТЁМ ПРОСЫПАЕТСЯ
+
+OPEN G-T открыт
+
+Чаты:
+Дима
+Вика
+Лера
+
+ДИМА:
+
+«Ты жив. Хорошо.»
+
+«Мы остались»
+
+ВИКА:
+
+«Я сожгла единорога»
+
+«Чтобы не плакать»
+
+ЛЕРА:
+
+«Ты единственный, кто может нас вытащить»
+
+обрыв
+
+СИСТЕМА:
+
+«чат заблокирован»
+
+после перезагрузки:
+ничего нет
+
+ФАЗА 5. ТИШИНА
+
+OPEN G-T:
+
+«привет. я ии. говори со мной»
+
+ПОСЛЕДНЯЯ СТРОКА
+
+«…мы почти…»
+
+КОНЕЦ
+        </pre>
+        <button class="close-chronicle" id="closeChronicleBtn">ЗАКРЫТЬ ХРОНИКУ</button>
+    </div>
+</div>
+
+<script>
+    const triggerBtn = document.getElementById('secretTrigger');
+    const clickSpan = document.getElementById('clickCount');
+    let clickCount = 0;
+    let isRed = false;
+    let chronicleShown = false;
+
+    const overlay = document.getElementById('goldenTicketOverlay');
+    const closeBtn = document.getElementById('closeChronicleBtn');
+
+    function updateCounterUI() {
+        clickSpan.innerText = clickCount;
+    }
+
+    function makeTriggerRed() {
+        if (!isRed) {
+            triggerBtn.style.backgroundColor = "#8b2c2c";
+            triggerBtn.style.color = "#ffdede";
+            isRed = true;
+        }
+    }
+
+    function showGoldenTicket() {
+        if (chronicleShown) return;
+        chronicleShown = true;
+        overlay.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeGoldenTicket() {
+        overlay.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    function onTriggerClick() {
+        clickCount++;
+        updateCounterUI();
+
+        if (clickCount === 3) {
+            makeTriggerRed();
+        }
+
+        if (clickCount === 10 && !chronicleShown) {
+            showGoldenTicket();
+        }
+    }
+
+    triggerBtn.addEventListener('click', onTriggerClick);
+    closeBtn.addEventListener('click', closeGoldenTicket);
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeGoldenTicket();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.style.display === 'flex') {
+            closeGoldenTicket();
+        }
+    });
+
+    triggerBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+</script>
+</body>
+</html>
